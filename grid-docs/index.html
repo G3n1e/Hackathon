@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grid Field Notes (Local)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="wrap">
+    <div class="brand">
+      <div class="logo">⚡</div>
+      <div>
+        <h1>Grid Field Notes (Local)</h1>
+        <p class="muted">
+          Non-operational documentation hub for safety notes, escalation steps, and your own recordings.
+        </p>
+      </div>
+    </div>
+
+    <div class="alert">
+      <strong>Safety notice:</strong>
+      This page is for documentation and training notes only. Power lines and substations are hazardous.
+      Do not attempt work unless you are qualified, authorized, and following your utility’s procedures.
+      In emergencies, contact the utility control center / dispatch.
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab active" role="tab" aria-selected="true" data-tab="line">Power Line</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="substation">Substation</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="general">General</button>
+    </nav>
+
+    <section class="card" id="tab-line" data-panel="line">
+      <h2>Power Line Notes</h2>
+      <p class="muted">
+        Use for: hazard recognition, reporting criteria, communications, photos, and audio notes.
+        Avoid operational repair steps.
+      </p>
+
+      <div class="grid">
+        <div class="panel">
+          <h3>Text Notes</h3>
+          <textarea id="notes-line" placeholder="Write notes here..."></textarea>
+          <div class="row">
+            <button class="btn" data-save="line">Save Notes</button>
+            <button class="btn ghost" data-clear="line">Clear</button>
+          </div>
+          <p class="tiny muted">Saved locally in your browser (localStorage).</p>
+        </div>
+
+        <div class="panel">
+          <h3>Voice Recording</h3>
+          <div class="recorder">
+            <button class="btn" id="rec-line">Start Recording</button>
+            <button class="btn ghost" id="stop-line" disabled>Stop</button>
+          </div>
+          <audio id="play-line" controls class="audio" hidden></audio>
+          <div id="downloads-line" class="downloads"></div>
+
+          <details class="help">
+            <summary>Suggested safe topics to record</summary>
+            <ul>
+              <li>What you observed (weather, visible damage, access constraints)</li>
+              <li>Who you contacted (dispatch/control center), timestamp, ticket IDs</li>
+              <li>Public safety actions taken (keeping people away, barriers, calling authorities)</li>
+              <li>Non-operational reminders (PPE, minimum approach distance principles, do-not-touch warnings)</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="tab-substation" data-panel="substation" hidden>
+      <h2>Substation Notes</h2>
+      <p class="muted">
+        Use for: alarms observed, access logs, escalation, compliance notes, incident documentation.
+        Avoid switching/repair instructions.
+      </p>
+
+      <div class="grid">
+        <div class="panel">
+          <h3>Text Notes</h3>
+          <textarea id="notes-substation" placeholder="Write notes here..."></textarea>
+          <div class="row">
+            <button class="btn" data-save="substation">Save Notes</button>
+            <button class="btn ghost" data-clear="substation">Clear</button>
+          </div>
+          <p class="tiny muted">Saved locally in your browser (localStorage).</p>
+        </div>
+
+        <div class="panel">
+          <h3>Voice Recording</h3>
+          <div class="recorder">
+            <button class="btn" id="rec-substation">Start Recording</button>
+            <button class="btn ghost" id="stop-substation" disabled>Stop</button>
+          </div>
+          <audio id="play-substation" controls class="audio" hidden></audio>
+          <div id="downloads-substation" class="downloads"></div>
+
+          <details class="help">
+            <summary>Suggested safe topics to record</summary>
+            <ul>
+              <li>Which indicators/alarms were present (as displayed), time, and who was notified</li>
+              <li>Site access notes (gates, escorts, sign-in/out) and any safety constraints</li>
+              <li>Environmental observations (smoke/odors/noise) — without operational action steps</li>
+              <li>Incident documentation for later engineering review</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="tab-general" data-panel="general" hidden>
+      <h2>General Templates</h2>
+
+      <div class="grid">
+        <div class="panel">
+          <h3>Incident Log Template</h3>
+          <pre class="pre">
+Date/Time:
+Location:
+Observed issue:
+Immediate public-safety concerns:
+Notifications made (who/when):
+Ticket/Work order ID:
+Photos/attachments:
+Follow-up required:
+          </pre>
+          <button class="btn ghost" data-copy="incident">Copy Template</button>
+        </div>
+
+        <div class="panel">
+          <h3>Quick Safety Reminders (Non-operational)</h3>
+          <ul class="list">
+            <li>Treat all conductors as energized unless confirmed otherwise by authorized control.</li>
+            <li>Maintain required approach distances and use appropriate barriers/signage.</li>
+            <li>Do not touch downed lines or nearby objects; call dispatch/emergency services.</li>
+            <li>Follow your organization’s lockout/tagout and switching authority rules.</li>
+          </ul>
+
+          <h3 class="mt">Site Settings</h3>
+          <button class="btn danger" id="wipe-all">Wipe All Local Notes</button>
+          <p class="tiny muted">This removes localStorage notes only. Audio files you downloaded remain on disk.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap tiny muted">
+    Local-only page • Notes stored in your browser • Audio saved by download
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
