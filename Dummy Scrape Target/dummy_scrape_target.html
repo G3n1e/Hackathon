@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FieldOps Portal (Dummy Scrape Target)</title>
+  <style>
+    :root {
+      --bg:#0b0f14; --card:#101826; --text:#e7eefc; --muted:#a6b3cc; --line:rgba(255,255,255,.08);
+      --ok:rgba(0,255,120,.18); --warn:rgba(255,200,0,.18); --bad:rgba(255,60,60,.18);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    header,main,footer{max-width:1200px;margin:0 auto;padding:20px}
+    h1{margin:0;font-size:22px}
+    h2{margin:18px 0 10px;font-size:18px}
+    h3{margin:0 0 8px;font-size:14px}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .pill{border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.03);font-size:12px}
+    .pill.ok{background:var(--ok)}
+    .pill.warn{background:var(--warn)}
+    .pill.bad{background:var(--bad)}
+    .card{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:14px}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+    .kpi{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:10px}
+    @media(max-width:900px){.kpi{grid-template-columns:repeat(2,minmax(140px,1fr))}}
+    .kpi .card{padding:12px}
+    .big{font-size:18px;font-weight:700}
+    .tiny{font-size:12px}
+    .table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    .table th,.table td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}
+    .table th{background:rgba(255,255,255,.03)}
+    .table tr:hover{background:rgba(255,255,255,.03)}
+    details{border:1px solid var(--line);border-radius:14px;padding:10px;background:rgba(255,255,255,.02)}
+    details summary{cursor:pointer}
+    .search{flex:1;min-width:240px}
+    input,select{
+      width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);
+      background:rgba(0,0,0,.25);color:var(--text);outline:none
+    }
+    .section{margin-top:14px}
+    .tag{font-size:11px;border:1px dashed var(--line);padding:4px 8px;border-radius:999px;color:var(--muted)}
+    .doc{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .doc .meta{display:flex;gap:8px;flex-wrap:wrap}
+    .doc a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--line)}
+    .doc a:hover{border-bottom-color:rgba(255,255,255,.35)}
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    .hr{height:1px;background:var(--line);margin:12px 0}
+    .notice{border-left:4px solid rgba(255,255,255,.18);padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}
+  </style>
+</head>
+
+<body data-app="fieldops" data-env="dummy" data-version="0.9.0">
+<header class="card" data-section="header">
+  <div class="row" style="justify-content:space-between">
+    <div>
+      <h1 data-field="portal_title">FieldOps Procedure Portal</h1>
+      <div class="muted tiny">
+        Dummy scrape target • predictable DOM hooks • intentionally noisy structure
+      </div>
+    </div>
+    <div class="row" data-section="session">
+      <span class="pill" data-field="tenant">Tenant: SK-UTILITY-DEMO</span>
+      <span class="pill ok" data-field="auth_state">Auth: signed_in</span>
+      <span class="pill" data-field="user">User: demo.tech</span>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+
+  <div class="row" data-section="filters">
+    <div class="search">
+      <label class="tiny muted">Search</label>
+      <input data-hook="search_input" placeholder="Try: WO-1041, Boundary Dam, Bay 3, Line L-77..." />
+    </div>
+    <div style="min-width:200px">
+      <label class="tiny muted">Region</label>
+      <select data-hook="region_select">
+        <option>South</option>
+        <option selected>Central</option>
+        <option>North</option>
+      </select>
+    </div>
+    <div style="min-width:200px">
+      <label class="tiny muted">Asset Type</label>
+      <select data-hook="asset_select">
+        <option selected>All</option>
+        <option>Power Line</option>
+        <option>Substation</option>
+      </select>
+    </div>
+    <div style="min-width:200px">
+      <label class="tiny muted">Status</label>
+      <select data-hook="status_select">
+        <option selected>Any</option>
+        <option>Open</option>
+        <option>In Review</option>
+        <option>Closed</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section notice" data-section="banner">
+    <strong data-field="banner_title">Training / Demo Only</strong>
+    <div class="tiny muted" data-field="banner_text">
+      All records below are fictional. This page is designed for extension scraping tests.
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- KPIs -->
+  <section class="kpi" data-section="kpis">
+    <div class="card" data-kpi="open_work_orders">
+      <div class="tiny muted">Open Work Orders</div>
+      <div class="big" data-value="17">17</div>
+      <div class="tiny muted" data-subvalue="updated_at">Updated: 2026-01-31 09:18</div>
+    </div>
+    <div class="card" data-kpi="assets_flagged">
+      <div class="tiny muted">Assets Flagged</div>
+      <div class="big" data-value="6">6</div>
+      <div class="tiny muted">Reason: inspection follow-up</div>
+    </div>
+    <div class="card" data-kpi="docs_recent">
+      <div class="tiny muted">New Docs (7d)</div>
+      <div class="big" data-value="24">24</div>
+      <div class="tiny muted">Includes: memos, checklists, logs</div>
+    </div>
+    <div class="card" data-kpi="voice_notes">
+      <div class="tiny muted">Voice Notes</div>
+      <div class="big" data-value="9">9</div>
+      <div class="tiny muted">Transcript-ready blocks</div>
+    </div>
+  </section>
+
+  <!-- WORK ORDERS -->
+  <section class="section card" data-section="work_orders">
+    <div class="row" style="justify-content:space-between">
+      <h2 data-title="work_orders">Work Orders</h2>
+      <span class="tag" data-hook="pagination_state">page=1&size=5&sort=updated_desc</span>
+    </div>
+
+    <table class="table" data-table="work_orders">
+      <thead>
+        <tr>
+          <th>WO</th>
+          <th>Status</th>
+          <th>Asset</th>
+          <th>Site</th>
+          <th>Updated</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-row="work_order" data-wo-id="WO-1041" data-status="Open" data-priority="P2">
+          <td><a href="#" data-field="wo_link">WO-1041</a></td>
+          <td><span class="pill warn" data-field="wo_status">Open</span></td>
+          <td data-field="wo_asset">Line L-77 (115 kV)</td>
+          <td data-field="wo_site">Feeder: Regina-East</td>
+          <td data-field="wo_updated">2026-01-31 08:52</td>
+          <td data-field="wo_priority">P2</td>
+        </tr>
+        <tr data-row="work_order" data-wo-id="WO-1038" data-status="In Review" data-priority="P3">
+          <td><a href="#" data-field="wo_link">WO-1038</a></td>
+          <td><span class="pill" data-field="wo_status">In Review</span></td>
+          <td data-field="wo_asset">Substation BD-SS1</td>
+          <td data-field="wo_site">Boundary Dam</td>
+          <td data-field="wo_updated">2026-01-30 17:21</td>
+          <td data-field="wo_priority">P3</td>
+        </tr>
+        <tr data-row="work_order" data-wo-id="WO-1032" data-status="Open" data-priority="P1">
+          <td><a href="#" data-field="wo_link">WO-1032</a></td>
+          <td><span class="pill bad" data-field="wo_status">Open</span></td>
+          <td data-field="wo_asset">Line L-12 (25 kV)</td>
+          <td data-field="wo_site">Moose Jaw North</td>
+          <td data-field="wo_updated">2026-01-30 12:04</td>
+          <td data-field="wo_priority">P1</td>
+        </tr>
+        <tr data-row="work_order" data-wo-id="WO-1029" data-status="Closed" data-priority="P4">
+          <td><a href="#" data-field="wo_link">WO-1029</a></td>
+          <td><span class="pill ok" data-field="wo_status">Closed</span></td>
+          <td data-field="wo_asset">Substation PR-SS2</td>
+          <td data-field="wo_site">Poplar River</td>
+          <td data-field="wo_updated">2026-01-28 09:11</td>
+          <td data-field="wo_priority">P4</td>
+        </tr>
+        <tr data-row="work_order" data-wo-id="WO-1026" data-status="Open" data-priority="P3">
+          <td><a href="#" data-field="wo_link">WO-1026</a></td>
+          <td><span class="pill warn" data-field="wo_status">Open</span></td>
+          <td data-field="wo_asset">Line L-44 (69 kV)</td>
+          <td data-field="wo_site">Weyburn Spur</td>
+          <td data-field="wo_updated">2026-01-27 14:38</td>
+          <td data-field="wo_priority">P3</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row" style="justify-content:space-between;margin-top:10px" data-section="work_orders_footer">
+      <span class="muted tiny" data-field="result_count">Showing 5 of 17</span>
+      <div class="row">
+        <button data-hook="prev_page" disabled class="pill">Prev</button>
+        <button data-hook="next_page" class="pill">Next</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSETS -->
+  <section class="section grid" data-section="assets">
+    <div class="card" data-asset-group="power_lines">
+      <div class="row" style="justify-content:space-between">
+        <h2 data-title="power_lines">Power Lines</h2>
+        <span class="tag" data-field="group_id">group=lines</span>
+      </div>
+
+      <div class="card" style="margin-top:10px" data-asset="line" data-asset-id="L-77">
+        <div class="doc">
+          <div>
+            <h3 data-field="asset_name">Line L-77</h3>
+            <div class="muted tiny" data-field="asset_meta">115 kV • 42 km • Region: Central</div>
+          </div>
+          <div class="meta">
+            <span class="pill warn" data-field="asset_status">Needs Review</span>
+            <span class="pill" data-field="asset_last_inspection">Last: 2025-12-18</span>
+          </div>
+        </div>
+
+        <details class="section" data-block="transcript" data-transcript-id="VN-3001">
+          <summary>
+            Voice Note VN-3001 <span class="muted tiny">(transcript block)</span>
+          </summary>
+          <p class="tiny muted" data-field="transcript_meta">
+            Author: demo.tech • Recorded: 2026-01-31 08:40 • Location: Regina-East feeder
+          </p>
+          <div data-field="transcript_text">
+            Observed: snow drift near access road, visibility reduced. Public kept back with cones/tape.
+            Notified dispatch at 08:43; ticket WO-1041 referenced. No operational actions recorded here.
+          </div>
+        </details>
+
+        <div class="section" data-block="docs">
+          <div class="row" style="justify-content:space-between">
+            <div class="muted tiny">Related Docs</div>
+            <span class="tag" data-field="doc_count">count=3</span>
+          </div>
+          <div class="section" data-doc="item" data-doc-id="DOC-7781">
+            <div class="doc">
+              <div>
+                <a href="#" data-field="doc_title">DOC-7781 — Patrol Photo Log</a>
+                <div class="muted tiny" data-field="doc_desc">Images + notes for L-77 corridor patrol</div>
+              </div>
+              <div class="meta">
+                <span class="pill" data-field="doc_type">photo_log</span>
+                <span class="pill" data-field="doc_updated">2026-01-30 16:55</span>
+              </div>
+            </div>
+          </div>
+          <div class="section" data-doc="item" data-doc-id="DOC-7780">
+            <div class="doc">
+              <div>
+                <a href="#" data-field="doc_title">DOC-7780 — Safety Brief (Non-operational)</a>
+                <div class="muted tiny" data-field="doc_desc">Hazard recognition and escalation checklist</div>
+              </div>
+              <div class="meta">
+                <span class="pill" data-field="doc_type">checklist</span>
+                <span class="pill" data-field="doc_updated">2026-01-29 09:12</span>
+              </div>
+            </div>
+          </div>
+          <div class="section" data-doc="item" data-doc-id="DOC-7773">
+            <div class="doc">
+              <div>
+                <a href="#" data-field="doc_title">DOC-7773 — Weather / Access Notes</a>
+                <div class="muted tiny" data-field="doc_desc">Road conditions and accessibility markers</div>
+              </div>
+              <div class="meta">
+                <span class="pill" data-field="doc_type">memo</span>
+                <span class="pill" data-field="doc_updated">2026-01-28 11:07</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:10px" data-asset="line" data-asset-id="L-12">
+        <div class="doc">
+          <div>
+            <h3 data-field="asset_name">Line L-12</h3>
+            <div class="muted tiny" data-field="asset_meta">25 kV • 9 km • Region: Central</div>
+          </div>
+          <div class="meta">
+            <span class="pill bad" data-field="asset_status">Open Issue</span>
+            <span class="pill" data-field="asset_last_inspection">Last: 2025-11-02</span>
+          </div>
+        </div>
+
+        <details class="section" data-block="transcript" data-transcript-id="VN-2994">
+          <summary>
+            Voice Note VN-2994 <span class="muted tiny">(transcript block)</span>
+          </summary>
+          <p class="tiny muted" data-field="transcript_meta">
+            Author: demo.tech • Recorded: 2026-01-30 11:55 • Location: Moose Jaw North
+          </p>
+          <div data-field="transcript_text">
+            Report received from public about sparking near pole line. Area secured; authorities notified.
+            Dispatch contacted; WO-1032 opened. No procedural steps documented in this dummy transcript.
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="card" data-asset-group="substations">
+      <div class="row" style="justify-content:space-between">
+        <h2 data-title="substations">Substations</h2>
+        <span class="tag" data-field="group_id">group=substations</span>
+      </div>
+
+      <div class="card" style="margin-top:10px" data-asset="substation" data-asset-id="BD-SS1">
+        <div class="doc">
+          <div>
+            <h3 data-field="asset_name">BD-SS1</h3>
+            <div class="muted tiny" data-field="asset_meta">Boundary Dam • 230/115 kV • Region: Central</div>
+          </div>
+          <div class="meta">
+            <span class="pill warn" data-field="asset_status">In Review</span>
+            <span class="pill" data-field="asset_last_audit">Audit: 2025-12-06</span>
+          </div>
+        </div>
+
+        <div class="section" data-block="bays">
+          <div class="muted tiny">Bays</div>
+          <div class="row" style="margin-top:8px">
+            <span class="pill" data-bay="1" data-bay-name="Bay 1">Bay 1</span>
+            <span class="pill warn" data-bay="2" data-bay-name="Bay 2">Bay 2</span>
+            <span class="pill" data-bay="3" data-bay-name="Bay 3">Bay 3</span>
+          </div>
+        </div>
+
+        <details class="section" data-block="transcript" data-transcript-id="VN-3005">
+          <summary>
+            Voice Note VN-3005 <span class="muted tiny">(transcript block)</span>
+          </summary>
+          <p class="tiny muted" data-field="transcript_meta">
+            Author: demo.tech • Recorded: 2026-01-30 16:58 • Area: BD-SS1 control house
+          </p>
+          <div data-field="transcript_text">
+            Alarm panel indicated repeated event code on Bay 2 feeder. Logged time and notified control center.
+            Entry/exit times captured. No switching/repair guidance included in this dummy text.
+          </div>
+        </details>
+
+        <div class="section" data-block="docs">
+          <div class="row" style="justify-content:space-between">
+            <div class="muted tiny">Related Docs</div>
+            <span class="tag" data-field="doc_count">count=2</span>
+          </div>
+
+          <div class="section" data-doc="item" data-doc-id="DOC-8802">
+            <div class="doc">
+              <div>
+                <a href="#" data-field="doc_title">DOC-8802 — Control House Log (Template)</a>
+                <div class="muted tiny" data-field="doc_desc">Shift handover / incident log format</div>
+              </div>
+              <div class="meta">
+                <span class="pill" data-field="doc_type">template</span>
+                <span class="pill" data-field="doc_updated">2026-01-29 07:44</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" data-doc="item" data-doc-id="DOC-8801">
+            <div class="doc">
+              <div>
+                <a href="#" data-field="doc_title">DOC-8801 — Compliance Reminder</a>
+                <div class="muted tiny" data-field="doc_desc">Access control + reporting requirements</div>
+              </div>
+              <div class="meta">
+                <span class="pill" data-field="doc_type">memo</span>
+                <span class="pill" data-field="doc_updated">2026-01-28 15:02</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:10px" data-asset="substation" data-asset-id="PR-SS2">
+        <div class="doc">
+          <div>
+            <h3 data-field="asset_name">PR-SS2</h3>
+            <div class="muted tiny" data-field="asset_meta">Poplar River • 230/115 kV • Region: Central</div>
+          </div>
+          <div class="meta">
+            <span class="pill ok" data-field="asset_status">Stable</span>
+            <span class="pill" data-field="asset_last_audit">Audit: 2025-10-22</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCRAPE TEST CASES -->
+  <section class="section card" data-section="edge_cases">
+    <h2 data-title="edge_cases">Scrape Edge Cases</h2>
+
+    <div class="grid">
+      <div class="card" data-case="duplicate_ids">
+        <h3>Duplicate-ish Identifiers</h3>
+        <p class="muted tiny">Test your selector logic against similar strings.</p>
+        <ul data-list="ids">
+          <li data-id="WO-01041">WO-01041</li>
+          <li data-id="WO-1041">WO-1041</li>
+          <li data-id="WO-1041-A">WO-1041-A</li>
+          <li data-id="WO-1041 (Reopen)">WO-1041 (Reopen)</li>
+        </ul>
+      </div>
+
+      <div class="card" data-case="nested_noise">
+        <h3>Nested Noise DOM</h3>
+        <p class="muted tiny">Deep nesting with repeated keys.</p>
+        <div data-noise="lvl1">
+          <div data-noise="lvl2">
+            <div data-noise="lvl3">
+              <span data-field="noise_value">value: 123</span>
+              <span data-field="noise_value">value: 456</span>
+              <div data-noise="lvl4">
+                <span data-field="noise_value">value: 789</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-case="json_blob">
+        <h3>Embedded JSON Blob</h3>
+        <p class="muted tiny">Common extension target: parse JSON in a script tag.</p>
+        <script type="application/json" data-hook="embedded_json">
+{
+  "work_orders": [
+    {"id":"WO-1041","status":"Open","priority":"P2","updated":"2026-01-31T08:52:00-06:00"},
+    {"id":"WO-1032","status":"Open","priority":"P1","updated":"2026-01-30T12:04:00-06:00"}
+  ],
+  "assets": [
+    {"type":"line","id":"L-77","kv":115,"region":"Central"},
+    {"type":"substation","id":"BD-SS1","kv":"230/115","region":"Central"}
+  ]
+}
+        </script>
+        <div class="muted tiny">
+          Selector hint: <code>script[data-hook="embedded_json"]</code>
+        </div>
+      </div>
+
+      <div class="card" data-case="timestamp_formats">
+        <h3>Timestamp Formats</h3>
+        <ul data-list="timestamps">
+          <li data-ts="iso">2026-01-31T09:18:00-06:00</li>
+          <li data-ts="space">2026-01-31 09:18</li>
+          <li data-ts="us">01/31/2026 09:18 AM</li>
+          <li data-ts="words">Sat Jan 31 2026 09:18:00 GMT-0600</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="muted tiny">
+  <div class="card" data-section="footer">
+    Dummy portal for extension testing • stable selectors: <code>data-section</code>, <code>data-table</code>,
+    <code>data-row</code>, <code>data-field</code>, <code>data-asset</code>, <code>data-doc</code>, <code>data-block</code>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Local Job Card Generator",
-  "version": "0.1.0",
-  "permissions": ["activeTab", "scripting"],
+  "version": "0.2.0",
+  "permissions": ["activeTab", "scripting", "tabs", "storage"],
   "host_permissions": ["http://127.0.0.1:8787/*"],
   "action": { "default_popup": "popup.html" }
 }
