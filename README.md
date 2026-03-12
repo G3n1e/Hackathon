@@ -207,4 +207,14 @@ This tool is for **documentation and training purposes only**. It is non-operati
 
 ---
 
-*Built at 2026 SaskHack Hackathon. Local AI, no cloud.*
+## Team
+
+Built at the 2026 SaskHack Hackathon by:
+
+- Harini Krishnaraj
+- Sam Egunjobi
+- Grace Martinez
+- Anna Wiens
+- Talia Iwanchysko
+
+*Local AI, no cloud.*
