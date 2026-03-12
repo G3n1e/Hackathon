@@ -1,0 +1,92 @@
+<!doctype html>
+<!--
+  SK-Connect Icon Generator
+  Open this file in a browser, then click "Download All Icons".
+  Save the downloaded files into the chrome-extension/icons/ folder.
+-->
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>SK-Connect Icon Generator</title>
+  <style>
+    body { font-family: sans-serif; padding: 24px; background: #0b0f14; color: #e8eef8; }
+    h1 { color: #6ee7ff; }
+    .canvases { display: flex; gap: 24px; align-items: flex-end; flex-wrap: wrap; margin: 24px 0; }
+    .item { text-align: center; }
+    .item p { margin: 6px 0 0; font-size: 13px; color: rgba(232,238,248,0.7); }
+    button { padding: 12px 24px; background: rgba(110,231,255,0.15); color: #6ee7ff; border: 1px solid rgba(110,231,255,0.35); border-radius: 10px; cursor: pointer; font-size: 15px; margin-top: 16px; }
+    button:hover { background: rgba(110,231,255,0.22); }
+    .note { margin-top: 16px; font-size: 13px; color: rgba(232,238,248,0.6); }
+  </style>
+</head>
+<body>
+  <h1>⚡ SK-Connect Icon Generator</h1>
+  <p>Click "Download All Icons" then save each file into <code>chrome-extension/icons/</code></p>
+
+  <div class="canvases">
+    <div class="item"><canvas id="c128" width="128" height="128"></canvas><p>icon128.png</p></div>
+    <div class="item"><canvas id="c48" width="48" height="48"></canvas><p>icon48.png</p></div>
+    <div class="item"><canvas id="c16" width="16" height="16"></canvas><p>icon16.png</p></div>
+  </div>
+
+  <button id="dlBtn">Download All Icons</button>
+
+  <p class="note">These icons will be auto-downloaded to your Downloads folder. Move them to <code>chrome-extension/icons/</code></p>
+
+  <script>
+    function drawIcon(canvas) {
+      const s = canvas.width;
+      const ctx = canvas.getContext("2d");
+
+      // Background
+      const bg = ctx.createRadialGradient(s * 0.4, s * 0.35, 0, s * 0.5, s * 0.5, s * 0.7);
+      bg.addColorStop(0, "#1a2840");
+      bg.addColorStop(1, "#0b0f14");
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      ctx.roundRect(0, 0, s, s, s * 0.22);
+      ctx.fill();
+
+      // Lightning bolt
+      ctx.fillStyle = "#6ee7ff";
+      ctx.shadowColor = "#6ee7ff";
+      ctx.shadowBlur = s * 0.12;
+
+      const cx = s * 0.5;
+      const top = s * 0.12;
+      const mid = s * 0.50;
+      const bot = s * 0.88;
+      const left = s * 0.22;
+      const right = s * 0.78;
+      const midLeft = s * 0.30;
+      const midRight = s * 0.70;
+
+      // Classic lightning bolt path
+      ctx.beginPath();
+      ctx.moveTo(cx + s * 0.10, top);
+      ctx.lineTo(left, mid + s * 0.04);
+      ctx.lineTo(midLeft + s * 0.06, mid + s * 0.04);
+      ctx.lineTo(cx - s * 0.10, bot);
+      ctx.lineTo(right, mid - s * 0.04);
+      ctx.lineTo(midRight - s * 0.06, mid - s * 0.04);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+    }
+
+    const sizes = [128, 48, 16];
+    sizes.forEach(sz => drawIcon(document.getElementById(`c${sz}`)));
+
+    document.getElementById("dlBtn").addEventListener("click", () => {
+      sizes.forEach(sz => {
+        const canvas = document.getElementById(`c${sz}`);
+        const a = document.createElement("a");
+        a.download = `icon${sz}.png`;
+        a.href = canvas.toDataURL("image/png");
+        a.click();
+      });
+    });
+  </script>
+</body>
+</html>

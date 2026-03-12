@@ -257,6 +257,99 @@ Source: ${jc.source_url || ""}`;
 }
 
 /* ---------------------------
+   Job Card History
+---------------------------- */
+
+async function loadCardHistory() {
+  const listEl = document.getElementById("history-list");
+  if (!listEl) return;
+
+  const hasChromeStorage = typeof chrome !== "undefined" && chrome.storage && chrome.storage.local;
+  if (!hasChromeStorage) {
+    listEl.innerHTML = `<div class="muted">Open via the extension to view history.</div>`;
+    return;
+  }
+
+  const { job_card_history = [] } = await chrome.storage.local.get(["job_card_history"]);
+
+  if (job_card_history.length === 0) {
+    listEl.innerHTML = `<div class="muted">No job cards yet. Generate one from the extension popup.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = job_card_history.map((jc, i) => {
+    const savedAt = jc._saved_at ? new Date(jc._saved_at).toLocaleString() : "Unknown time";
+    const ytLine = jc.youtube_link && !jc.youtube_link.includes("VIDEO_ID_TBD")
+      ? `<a href="${esc(jc.youtube_link)}" target="_blank" rel="noreferrer">Video link</a>`
+      : "";
+    return `
+    <details class="history-item panel" style="margin-bottom:10px;" ${i === 0 ? "open" : ""}>
+      <summary style="cursor:pointer;padding:4px 0;font-weight:600;">
+        ${esc(jc.task_name || "Untitled Task")}
+        <span class="tiny muted" style="font-weight:400;margin-left:8px;">${savedAt}</span>
+      </summary>
+      <div style="margin-top:10px;">
+        <p class="tiny muted">From: ${jc.source_url ? `<a href="${esc(jc.source_url)}" target="_blank" rel="noreferrer">${esc(jc.source_title || "source")}</a>` : esc(jc.source_title || "")}</p>
+        <h4 class="mt">When to use</h4><p>${esc(jc.when_to_use || "")}</p>
+        <h4 class="mt">Steps</h4>${steps(jc.steps)}
+        <h4 class="mt">Safety notes</h4>${bullets(jc.safety_notes)}
+        <h4 class="mt">Tools / PPE</h4>${bullets(jc.tools_ppe)}
+        <h4 class="mt">Common mistakes</h4>${bullets(jc.common_mistakes)}
+        <h4 class="mt">Acceptance checks</h4>${bullets(jc.acceptance_checks)}
+        ${ytLine ? `<h4 class="mt">Video</h4><p>${ytLine}</p>` : ""}
+        <div class="row" style="margin-top:10px;">
+          <button class="btn ghost history-copy-json" data-idx="${i}">Copy JSON</button>
+          <button class="btn ghost history-to-notes" data-idx="${i}">Copy into Notes</button>
+        </div>
+      </div>
+    </details>`;
+  }).join("");
+
+  // Wire per-card buttons
+  listEl.querySelectorAll(".history-copy-json").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const jc = job_card_history[+btn.dataset.idx];
+      if (jc) await copyTextToClipboard(JSON.stringify(jc, null, 2));
+    });
+  });
+
+  listEl.querySelectorAll(".history-to-notes").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const jc = job_card_history[+btn.dataset.idx];
+      if (!jc) return;
+      const tabKey = ["line", "substation"].find(k =>
+        !document.querySelector(`[data-panel="${k}"]`)?.hidden
+      ) || "line";
+      const textarea = document.getElementById(`notes-${tabKey}`);
+      if (!textarea) return;
+      const summary =
+`JOB CARD: ${jc.task_name || ""}
+When to use: ${jc.when_to_use || ""}
+
+Tools/PPE:
+- ${(jc.tools_ppe || []).join("\n- ")}
+
+Steps:
+${(jc.steps || []).map((s, i) => `${i + 1}. ${s}`).join("\n")}
+
+Safety:
+- ${(jc.safety_notes || []).join("\n- ")}
+
+Mistakes:
+- ${(jc.common_mistakes || []).join("\n- ")}
+
+Acceptance:
+- ${(jc.acceptance_checks || []).join("\n- ")}
+
+Video: ${jc.youtube_link || ""}
+Source: ${jc.source_url || ""}`;
+      textarea.value = (textarea.value ? textarea.value + "\n\n" : "") + summary;
+      saveNotes(tabKey);
+    });
+  });
+}
+
+/* ---------------------------
    Boot
 ---------------------------- */
 
@@ -266,7 +359,11 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => {
       const tabKey = btn.dataset.tab;
       setActiveTab(tabKey);
-      loadNotes(tabKey);
+      if (tabKey === "history") {
+        loadCardHistory();
+      } else {
+        loadNotes(tabKey);
+      }
     });
   });
 
@@ -316,4 +413,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Load job card
   loadLatestJobCard();
+
+  // History tab controls
+  const exportAll = document.getElementById("history-export-all");
+  const clearAll = document.getElementById("history-clear-all");
+
+  if (exportAll) {
+    exportAll.addEventListener("click", async () => {
+      const hasChromeStorage = typeof chrome !== "undefined" && chrome.storage && chrome.storage.local;
+      if (!hasChromeStorage) return;
+      const { job_card_history = [] } = await chrome.storage.local.get(["job_card_history"]);
+      const blob = new Blob([JSON.stringify(job_card_history, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `sk-connect-job-cards-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    });
+  }
+
+  if (clearAll) {
+    clearAll.addEventListener("click", async () => {
+      const hasChromeStorage = typeof chrome !== "undefined" && chrome.storage && chrome.storage.local;
+      if (!hasChromeStorage) return;
+      await chrome.storage.local.remove(["job_card_history", "last_job_card", "last_job_card_saved_at"]);
+      const listEl = document.getElementById("history-list");
+      if (listEl) listEl.innerHTML = `<div class="muted">History cleared.</div>`;
+    });
+  }
 });

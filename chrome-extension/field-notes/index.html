@@ -48,6 +48,7 @@
       <button class="tab active" role="tab" aria-selected="true" data-tab="line">Power Line</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="substation">Substation</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="general">General</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="history">Card History</button>
     </nav>
 
     <section class="card" id="tab-line" data-panel="line">
@@ -163,6 +164,16 @@ Follow-up required:
           <p class="tiny muted">This removes localStorage notes only. Audio files you downloaded remain on disk.</p>
         </div>
       </div>
+    </section>
+
+    <section class="card" id="tab-history" data-panel="history" hidden>
+      <h2>Job Card History</h2>
+      <p class="muted">All job cards generated this session (up to 20). Most recent first.</p>
+      <div class="row" style="margin-bottom:10px;">
+        <button class="btn ghost" id="history-export-all">Export All as JSON</button>
+        <button class="btn danger" id="history-clear-all">Clear History</button>
+      </div>
+      <div id="history-list"></div>
     </section>
   </main>
 

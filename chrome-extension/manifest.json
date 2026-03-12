@@ -1,8 +1,23 @@
 {
   "manifest_version": 3,
-  "name": "Local Job Card Generator",
-  "version": "0.2.0",
+  "name": "SK-Connect Job Card Generator",
+  "short_name": "SK-Connect",
+  "description": "Generate safety-first training job cards from any webpage using a local AI model. Includes field notes hub with voice recording for power line and substation documentation.",
+  "version": "1.0.0",
   "permissions": ["activeTab", "scripting", "tabs", "storage"],
   "host_permissions": ["http://127.0.0.1:8787/*"],
-  "action": { "default_popup": "popup.html" }
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SK-Connect Job Card Generator",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }

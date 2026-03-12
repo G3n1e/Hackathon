@@ -177,9 +177,14 @@ document.addEventListener("DOMContentLoaded", () => {
       window._jobcard = data.job_card;
 
       // Save for Field Notes hub
+      const savedAt = Date.now();
+      const { job_card_history = [] } = await chrome.storage.local.get(["job_card_history"]);
+      const entry = { ...data.job_card, _saved_at: savedAt };
+      const updated = [entry, ...job_card_history].slice(0, 20); // keep last 20
       await chrome.storage.local.set({
         last_job_card: data.job_card,
-        last_job_card_saved_at: Date.now()
+        last_job_card_saved_at: savedAt,
+        job_card_history: updated
       });
 
       // Update popup UI
